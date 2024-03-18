@@ -27,10 +27,11 @@ async function formSubmit(event) {
   console.log(dataCityArr);
   const [lat, lon] = getCityLatLon(dataCityArr);
   console.log(lat, lon);
-  const baseURLLatLon = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}`;
+  const baseURLLatLon = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${APIKey}`;
   const forecastData = await APICall(baseURLLatLon);
   console.log(forecastData);
-  populate(forecastData);
+  populateToday(forecastData);
+  populateForecast(forecastData);
 }
 
 function getCityLatLon(dataArr) {
@@ -39,12 +40,57 @@ function getCityLatLon(dataArr) {
   return [lat, lon];
 }
 
-function populate(data) {
+function populateToday(data) {
   const today = document.getElementById("today");
-  const innerText = `${data.city.name} ${dayjs().format("DD/MM/YYYY")}`;
+  today.innerHTML = "";
+  const innerText = `${data.city.name} (${dayjs().format("DD/MM/YYYY HH:mm")})`;
   const heading = document.createElement("h2");
   heading.textContent = innerText;
   today.appendChild(heading);
+  const infoList = document.createElement("li");
+  const temp = document.createElement("ul");
+  const wind = document.createElement("ul");
+  const humidity = document.createElement("ul");
+  temp.textContent = `Temperature: ${data.list[0].main.temp} /degrees C`;
+  wind.textContent = `Wind speed: ${data.list[0].wind.speed} /km/h`;
+  humidity.textContent = `humidity: ${data.list[0].main.humidity} g/kg`;
+  infoList.appendChild(temp);
+  infoList.appendChild(wind);
+  infoList.appendChild(humidity);
+  today.appendChild(infoList);
+}
+
+function populateForecast(data) {
+  const forecast = document.getElementById("forecast");
+  forecast.innerHTML = "";
+  forecast.appendChild(createForecastDiv(data, 8));
+  forecast.appendChild(createForecastDiv(data, 16));
+  forecast.appendChild(createForecastDiv(data, 24));
+  forecast.appendChild(createForecastDiv(data, 32));
+  forecast.appendChild(createForecastDiv(data, 40));
+}
+
+function createForecastDiv(data, listIndex) {
+  const dayDiv = document.createElement("div");
+  console.log(data.list[listIndex]);
+  const headingText = `${data.city.name} (${dayjs(
+    data.list[listIndex].dt_txt
+  ).format("DD/MM/YYYY HH:mm")})`;
+  const heading = document.createElement("h2");
+  heading.textContent = headingText;
+  dayDiv.appendChild(heading);
+  const infoList = document.createElement("li");
+  const temp = document.createElement("ul");
+  const wind = document.createElement("ul");
+  const humidity = document.createElement("ul");
+  temp.textContent = `Temperature: ${data.list[listIndex].main.temp} /degrees C`;
+  wind.textContent = `Wind speed: ${data.list[listIndex].wind.speed} /km/h`;
+  humidity.textContent = `humidity: ${data.list[listIndex].main.humidity} g/kg`;
+  infoList.appendChild(temp);
+  infoList.appendChild(wind);
+  infoList.appendChild(humidity);
+  dayDiv.appendChild(infoList);
+  return dayDiv;
 }
 
 const form = document.getElementById("search-form");
