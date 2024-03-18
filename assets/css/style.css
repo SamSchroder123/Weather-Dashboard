@@ -1,0 +1,23 @@
+header {
+  display: flex;
+  justify-content: center;
+  background-color: blue;
+}
+
+h1 {
+  color: aliceblue;
+}
+
+#forecast {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.forecast-div {
+  background-color: aliceblue;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 20px;
+}

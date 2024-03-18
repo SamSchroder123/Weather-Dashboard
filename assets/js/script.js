@@ -43,21 +43,22 @@ function getCityLatLon(dataArr) {
 function populateToday(data) {
   const today = document.getElementById("today");
   today.innerHTML = "";
-  const innerText = `${data.city.name} (${dayjs().format("DD/MM/YYYY HH:mm")})`;
-  const heading = document.createElement("h2");
-  heading.textContent = innerText;
-  today.appendChild(heading);
-  const infoList = document.createElement("li");
-  const temp = document.createElement("ul");
-  const wind = document.createElement("ul");
-  const humidity = document.createElement("ul");
-  temp.textContent = `Temperature: ${data.list[0].main.temp} /degrees C`;
-  wind.textContent = `Wind speed: ${data.list[0].wind.speed} /km/h`;
-  humidity.textContent = `humidity: ${data.list[0].main.humidity} g/kg`;
-  infoList.appendChild(temp);
-  infoList.appendChild(wind);
-  infoList.appendChild(humidity);
-  today.appendChild(infoList);
+  today.appendChild(createForecastDiv(data, 0));
+  //   const innerText = `${data.city.name} (${dayjs().format("DD/MM/YYYY HH:mm")})`;
+  //   const heading = document.createElement("h2");
+  //   heading.textContent = innerText;
+  //   today.appendChild(heading);
+  //   const infoList = document.createElement("li");
+  //   const temp = document.createElement("ul");
+  //   const wind = document.createElement("ul");
+  //   const humidity = document.createElement("ul");
+  //   temp.textContent = `Temperature: ${data.list[0].main.temp} /degrees C`;
+  //   wind.textContent = `Wind speed: ${data.list[0].wind.speed} /km/h`;
+  //   humidity.textContent = `humidity: ${data.list[0].main.humidity} g/kg`;
+  //   infoList.appendChild(temp);
+  //   infoList.appendChild(wind);
+  //   infoList.appendChild(humidity);
+  //   today.appendChild(infoList);
 }
 
 function populateForecast(data) {
@@ -72,6 +73,7 @@ function populateForecast(data) {
 
 function createForecastDiv(data, listIndex) {
   const dayDiv = document.createElement("div");
+  dayDiv.setAttribute("class", "forecast-div");
   console.log(data.list[listIndex]);
   const headingText = `${data.city.name} (${dayjs(
     data.list[listIndex].dt_txt
