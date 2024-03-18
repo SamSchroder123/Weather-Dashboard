@@ -6,7 +6,7 @@ const lon = "10.99";
 let city = "";
 
 function APICall(URL) {
-  fetch(URL)
+  return fetch(URL)
     .then((response) => {
       return response.json();
     })
@@ -16,18 +16,19 @@ function APICall(URL) {
     });
 }
 
-function formSubmit(event) {
+async function formSubmit(event) {
   event.preventDefault();
   const searchInput = document.getElementById("search-input").value;
   console.log("form submitted with value: " + searchInput);
   city = searchInput;
   const baseURLCity = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${APIKey}`;
-  const dataCityArr = APICall(baseURLCity);
+  console.log("getting lat and lon for", city);
+  const dataCityArr = await APICall(baseURLCity);
   console.log(dataCityArr);
   const [lat, lon] = getCityLatLon(dataCityArr);
   console.log(lat, lon);
   const baseURLLatLon = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}`;
-  const forecastData = APICall(baseURLLatLon);
+  const forecastData = await APICall(baseURLLatLon);
   console.log(forecastData);
   populate(forecastData);
 }
